@@ -1,355 +1,376 @@
 <!DOCTYPE html>
 <html lang="pt-AO">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CERPROD INDUSTRIAL • Gestão Industrial</title>
-    <style>
-        :root {
-            --bic-dark: #0b132b;
-            --bic-sidebar: #111c3a;
-            --bic-card: #1c2541;
-            --bic-accent: #e63946;
-            --bic-gold: #f59e0b;
-            --bic-blue: #38bdf8;
-            --bic-green: #10b981;
-            --txt: #f8fafc;
-            --mut: #94a3b8;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: var(--bic-dark); color: var(--txt); min-height: 100vh; display: flex; flex-direction: column; }
-
-        /* ECRÃ DE LOGIN ESTILO BICNET EMPRESAS */
-        #bicnet-login { position: fixed; inset: 0; background: linear-gradient(135deg, #0b132b 0%, #1c2541 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 16px; }
-        .login-card { background: var(--bic-sidebar); border-top: 5px solid var(--bic-accent); border-radius: 10px; width: 100%; max-width: 400px; padding: 32px; box-shadow: 0 25px 50px rgba(0,0,0,0.6); }
-        .login-logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; color: #fff; }
-        .login-logo span { color: var(--bic-accent); }
-        .login-sub { font-size: 11px; color: var(--mut); text-transform: uppercase; margin-bottom: 22px; letter-spacing: 0.8px; }
-        .field { margin-bottom: 16px; }
-        .field label { display: block; font-size: 11px; color: var(--mut); font-weight: bold; text-transform: uppercase; margin-bottom: 6px; }
-        .field select, .field input { width: 100%; padding: 12px; background: var(--bic-dark); border: 1px solid #334155; color: #fff; border-radius: 6px; font-size: 14px; font-weight: 600; }
-        .btn-bic { width: 100%; padding: 13px; background: var(--bic-accent); color: #fff; border: none; border-radius: 6px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
-        .btn-bic:hover { opacity: 0.9; }
-
-        /* TOPBAR CORPORATIVA + BADGE LICENÇA 1 ANO */
-        .topbar { background: var(--bic-sidebar); border-bottom: 1px solid #233058; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .licenca-badge { background: rgba(16, 185, 129, 0.15); border: 1px solid var(--bic-green); color: #6ee7b7; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-
-        /* LAYOUT ESTILO BICNET EMPRESAS (SIDEBAR ABAS + ÁREA PRINCIPAL) */
-        .layout { display: flex; flex: 1; }
-        .sidebar { width: 260px; background: var(--bic-sidebar); border-right: 1px solid #233058; padding: 20px 12px; display: flex; flex-direction: column; justify-content: space-between; }
-        .menu-titulo { font-size: 10px; color: var(--mut); text-transform: uppercase; font-weight: bold; padding: 0 12px 10px 12px; letter-spacing: 1px; }
-        .aba-btn { width: 100%; text-align: left; background: transparent; border: none; color: var(--mut); padding: 13px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; border-left: 4px solid transparent; }
-        .aba-btn.active { background: var(--bic-card); color: #fff; border-left: 4px solid var(--bic-accent); }
-        .aba-btn.bloqueada { opacity: 0.35; cursor: not-allowed; }
-        .content { flex: 1; padding: 26px; overflow-y: auto; }
-
-        /* CARDS & FORMULÁRIOS TÉCNICOS */
-        .panel-box { background: var(--bic-card); border-radius: 10px; padding: 24px; border: 1px solid #2a3966; max-width: 850px; }
-        .panel-header { border-bottom: 1px solid #2a3966; padding-bottom: 14px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-        .btn-sync { background: var(--bic-green); color: #052e16; border: none; padding: 14px 22px; border-radius: 6px; font-weight: 800; text-transform: uppercase; cursor: pointer; margin-top: 18px; width: 100%; font-size: 14px; }
-        .btn-print { background: var(--bic-gold); color: #0b132b; border: none; padding: 11px 18px; border-radius: 6px; font-weight: 800; text-transform: uppercase; cursor: pointer; font-size: 12px; }
-
-        /* GRÁFICOS POWER BI (DIRECÇÃO & ADMINISTRAÇÃO) */
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 14px; margin-bottom: 22px; }
-        .kpi-card { background: var(--bic-card); padding: 16px; border-radius: 8px; border-top: 4px solid var(--bic-blue); }
-        .kpi-card span { font-size: 11px; color: var(--mut); font-weight: bold; text-transform: uppercase; }
-        .kpi-card h2 { font-size: 24px; margin-top: 6px; }
-        .bi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .bi-box { background: var(--bic-card); padding: 20px; border-radius: 10px; border: 1px solid #2a3966; }
-        .col-chart { display: flex; align-items: flex-end; justify-content: space-around; height: 190px; padding-top: 24px; border-bottom: 2px solid #334155; }
-        .col-item { display: flex; flex-direction: column; align-items: center; width: 22%; height: 100%; justify-content: flex-end; }
-        .col-bar { width: 100%; border-radius: 5px 5px 0 0; position: relative; display: flex; justify-content: center; }
-        .col-val { position: absolute; top: -20px; font-size: 11px; font-weight: bold; }
-        .col-lbl { margin-top: 8px; font-size: 11px; color: var(--mut); text-align: center; font-weight: bold; }
-        .donut { width: 145px; height: 145px; border-radius: 50%; background: conic-gradient(#10b981 0% 90%, #e63946 90% 100%); display: flex; justify-content: center; align-items: center; }
-        .donut-in { width: 95px; height: 95px; background: var(--bic-card); border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-
-        @media (max-width: 768px) {
-            .layout { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #233058; }
-        }
-        @media print {
-            body { background: #fff !important; color: #000 !important; }
-            .sidebar, .no-print { display: none !important; }
-            .topbar { background: #fff !important; color: #000 !important; border-bottom: 2px solid #000 !important; }
-            .kpi-card, .bi-box { background: #f8fafc !important; color: #000 !important; border: 1px solid #cbd5e1 !important; }
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CERPROD INDUSTRIAL • Gestão Fabril & Engenharia de Custos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+body{background:#0b132b;color:#f8fafc;min-height:100vh;display:flex;flex-direction:column}
+#login{position:fixed;inset:0;background:radial-gradient(circle at top,#1c2541,#0b132b);display:flex;justify-content:center;align-items:center;z-index:99;padding:16px}
+.card-l{background:#111c3a;border-top:4px solid #e63946;padding:32px;border-radius:12px;width:100%;max-width:390px;box-shadow:0 24px 48px rgba(0,0,0,.65);border:1px solid #1e293b}
+label{display:block;font-size:13px;color:#cbd5e1;font-weight:600;margin-bottom:6px}
+input,select{width:100%;padding:11px 12px;margin-bottom:16px;background:#0b132b;border:1px solid #334155;color:#f8fafc;border-radius:8px;font-size:14px;outline:none;transition:border-color .2s}
+input:focus,select:focus{border-color:#2563eb}
+input::placeholder{color:#64748b;font-style:italic}
+.btn-brand{width:100%;padding:12px;background:#e63946;color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:14px}
+.btn-primary{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover{background:#1d4ed8}
+.btn-outline{background:transparent;color:#cbd5e1;border:1px solid #475569;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn-outline:hover{border-color:#94a3b8;color:#fff}
+.btn-danger-outline{background:transparent;color:#f87171;border:1px solid #ef4444;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+.btn-danger-outline:hover{background:rgba(239,68,68,.12)}
+.top{background:#111c3a;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1e293b;flex-wrap:wrap;gap:10px}
+.lic-warn{background:rgba(245,158,11,.15);border:1px solid #f59e0b;color:#fbbf24;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.wrap{display:flex;flex:1}
+.side{width:250px;background:#111c3a;padding:20px 12px;border-right:1px solid #1e293b;display:flex;flex-direction:column;justify-content:space-between}
+.aba{width:100%;text-align:left;background:none;border:none;color:#94a3b8;padding:11px 12px;border-radius:8px;font-weight:600;margin-bottom:6px;font-size:13.5px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.aba.on{background:rgba(37,99,235,.18);color:#93c5fd;border-left:3px solid #2563eb}
+.aba:hover:not(.on){background:#1e293b;color:#e2e8f0}
+.main{flex:1;padding:26px;overflow-y:auto}
+.box{background:#111c3a;padding:22px;border-radius:10px;border:1px solid #1e293b;margin-bottom:20px}
+.grid-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:20px}
+.kpi{background:#111c3a;padding:18px;border-radius:10px;border:1px solid #1e293b}
+.kpi span{font-size:12.5px;color:#94a3b8;font-weight:600;display:block}
+.kpi h2{font-size:22px;margin-top:8px;color:#f8fafc;font-weight:700}
+.kpi.alert{border-color:#ef4444}
+.kpi.alert h2{color:#f87171}
+.bi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-bottom:20px}
+.bars{display:flex;align-items:flex-end;justify-content:space-around;height:185px;border-bottom:1px solid #334155;padding-top:28px}
+.bar-col{display:flex;flex-direction:column;align-items:center;width:18%;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:54px;border-radius:6px 6px 0 0;position:relative;display:flex;justify-content:center}
+.bar b{position:absolute;top:-22px;font-size:11.5px;color:#e2e8f0;white-space:nowrap}
+.bar-lbl{margin-top:8px;font-size:12px;color:#94a3b8;font-weight:600;text-align:center}
+.donut{width:142px;height:142px;border-radius:50%;display:flex;justify-content:center;align-items:center;background:#334155}
+.hole{width:94px;height:94px;background:#111c3a;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.empty-state{height:185px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:13.5px;font-style:italic;border:1px dashed #1e293b;border-radius:8px}
+table{width:100%;border-collapse:collapse;text-align:left;margin-top:10px}
+th{border-bottom:1px solid #334155;color:#94a3b8;font-size:12px;padding:10px 8px;font-weight:600}
+td{border-bottom:1px solid #1e293b;padding:10px 8px;font-size:13px;color:#e2e8f0}
+@media(max-width:768px){.wrap{flex-direction:column}.side{width:100%}}
+@media print{.side,.noprint{display:none!important}body{background:#fff!important;color:#000!important}.kpi,.box{background:#fff!important;color:#000!important;border:1px solid #cbd5e1!important}}
+</style>
 </head>
 <body>
+<div id="login"><div class="card-l">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+<h2 style="font-size:21px;letter-spacing:.3px">CER<span style="color:#e63946">PROD</span> INDUSTRIAL</h2>
+<button type="button" class="btn-outline" id="btn-lang-login" onclick="mudarIdioma()" style="padding:4px 9px;font-size:11px">PT | EN</button>
+</div>
+<p style="font-size:12.5px;color:#94a3b8;margin-bottom:22px" data-i18n="sub_login">Portal de Gestão Fabril & Engenharia de Custos</p>
+<label data-i18n="lbl_user">Utilizador</label>
+<input type="text" id="u" placeholder="Ex.: producao, direccao, administracao" autocomplete="off">
+<label data-i18n="lbl_pin">Código PIN / Senha</label>
+<input type="password" id="p" placeholder="Introduza o seu PIN">
+<p id="err" style="color:#ef4444;font-size:12.5px;font-weight:600;margin-bottom:12px;display:none" data-i18n="err_login">Utilizador ou PIN inválido.</p>
+<button class="btn-brand" onclick="entrar()" data-i18n="btn_entrar">Entrar no Portal</button>
+</div></div>
 
-    <!-- PORTAL DE ACESSO BICNET EMPRESAS -->
-    <div id="bicnet-login">
-        <div class="login-card">
-            <div class="login-logo">CER<span>PROD</span> INDUSTRIAL</div>
-            <div class="login-sub">Portal Industrial MES/ERP • Acesso Restrito</div>
-            <div class="field">
-                <label>Perfil de Utilizador</label>
-                <select id="login-perfil">
-                    <option value="producao">1. Produção (Moldagem)</option>
-                    <option value="secagem">2. Secagem (Estufa & Forno)</option>
-                    <option value="desenforna">3. Desenforna (Triagem & Pátio)</option>
-                    <option value="supervisao">4. Supervisão (Controlo de Turno)</option>
-                    <option value="direccao">5. Direcção (Análise Gráfica Bié)</option>
-                    <option value="administracao">6. Administração (Sede Luanda)</option>
-                </select>
+<div class="top">
+<div style="display:flex;align-items:center;gap:10px">
+<b style="font-size:16px">CER<span style="color:#e63946">PROD</span> INDUSTRIAL</b>
+<span id="ubadge" style="color:#93c5fd;font-size:13px;font-weight:600"></span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span id="licBadge" style="display:none" class="lic-warn"></span>
+<button type="button" class="btn-outline noprint" id="btn-lang-top" onclick="mudarIdioma()">PT | EN</button>
+<button type="button" class="btn-outline noprint" onclick="location.reload()" data-i18n="btn_sair">Terminar sessão</button>
+</div>
+</div>
+
+<div class="wrap">
+<aside class="side noprint">
+<div id="menu-autorizado"></div>
+<div>
+<button class="aba" id="aba-sobre" onclick="mostrarSobre()">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+<span data-i18n="menu_sobre">Sobre o sistema</span>
+</button>
+</div>
+</aside>
+<main class="main" id="main"></main>
+</div><script>
+const EXP = new Date('2027-11-23T23:59:59'), DIAS = Math.ceil((EXP - new Date()) / 864e5);
+let LANG = localStorage.getItem('cerprod_lang') || 'PT';
+let PERFIL_ATUAL = null;
+let FILTRO_DATA_HIST = '';
+
+const ICONS = {
+    producao: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>',
+    secagem: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>',
+    desenforna: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+    supervisao: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    direccao: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+    administracao: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>'
+};
+
+const PERFIS = {
+    producao:      { nome: 'Técnico de Produção', menu: '1. Produção (Moldagem)', k: '1001' },
+    secagem:       { nome: 'Técnico de Secagem & Forno', menu: '2. Secagem & Forno', k: '2002' },
+    desenforna:    { nome: 'Técnico de Desenforna', menu: '3. Desenforna & Triagem', k: '3003' },
+    supervisao:    { nome: 'Supervisor de Turno', menu: '4. Supervisão de Turno', k: '4004' },
+    direccao:      { nome: 'Director de Unidade (Bié)', menu: '5. Direcção (Bié)', k: '5005' },
+    administracao: { nome: 'Administrador Executivo (Luanda)', menu: '6. Administração (Luanda)', k: 'luanda2026' }
+};
+
+function fmtNum(n) { return Math.round(Number(n || 0)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function fmtKz(n) {
+    const p = Number(n || 0).toFixed(2).split('.');
+    return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + p[1] + ' Kz';
+}
+function hojeISO() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function mudarIdioma() {
+    LANG = (LANG === 'PT') ? 'EN' : 'PT';
+    localStorage.setItem('cerprod_lang', LANG);
+    document.getElementById('btn-lang-login').innerText = LANG === 'PT' ? 'PT | EN' : 'EN | PT';
+    document.getElementById('btn-lang-top').innerText = LANG === 'PT' ? 'PT | EN' : 'EN | PT';
+    if (PERFIL_ATUAL) render(PERFIL_ATUAL);
+}
+
+function entrar() {
+    const rawU = document.getElementById('u').value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const p = document.getElementById('p').value.trim();
+    if (DIAS <= 0 || !PERFIS[rawU] || PERFIS[rawU].k !== p) { document.getElementById('err').style.display = 'block'; return; }
+    PERFIL_ATUAL = rawU;
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('ubadge').innerText = '• ' + PERFIS[rawU].nome;
+    if (DIAS <= 30) { const lb = document.getElementById('licBadge'); lb.style.display = 'inline-block'; lb.innerText = 'Licença expira em ' + DIAS + ' dias'; }
+    document.getElementById('menu-autorizado').innerHTML = `<button class="aba on" id="aba-principal" onclick="render('${rawU}')">${ICONS[rawU]}<span>${PERFIS[rawU].menu}</span></button>`;
+    render(rawU);
+}
+document.getElementById('p').addEventListener('keypress', e => { if (e.key === 'Enter') entrar(); });
+
+function mostrarSobre() {
+    document.querySelectorAll('.aba').forEach(b => b.classList.remove('on'));
+    document.getElementById('aba-sobre').classList.add('on');
+    document.getElementById('main').innerHTML = `<div class="box" style="max-width:680px"><h3 style="font-size:18px;margin-bottom:10px">CERPROD INDUSTRIAL • Especificações Técnicas</h3><table><tr><td><b>Arquitetura</b></td><td>Modular SOLID (Open/Closed Principle) • Híbrida Offline/Cloud</td></tr><tr><td><b>Governança</b></td><td>Segregação estrita por perfil e NDA financeiro na Direcção</td></tr><tr><td><b>Licenciamento</b></td><td>Licença Corporativa Activa (Válida até 23/11/2027)</td></tr><tr><td><b>Engenharia & Autoria</b></td><td>Vladmir Dieiro • Mob (SU), Lda</td></tr></table></div>`;
+}
+
+function getDB() {
+    return JSON.parse(localStorage.getItem('cerprod_v4_db') || '{"historico":[],"tarifas":{"argila":8500,"combustivel":420,"energia":180}}');
+}
+
+async function gravarTurno(mod) {
+    const dados = {};
+    let ok = false;
+    document.querySelectorAll('#main input, #main select').forEach(el => {
+        if (el.id) { dados[el.id] = el.value; if (el.type === 'number' && Number(el.value) > 0) ok = true; }
+    });
+    if (!ok) { alert('Preencha pelo menos uma quantidade antes de sincronizar.'); return; }
+    const db = getDB();
+    const dt = dados.pr_data || dados.sc_data || dados.ds_data || dados.sp_data || hojeISO();
+    db.historico.unshift({ id: db.historico.length + 1, terminal_origem: mod, data_turno: dt, dados_producao: dados, criado_em: new Date().toISOString() });
+    localStorage.setItem('cerprod_v4_db', JSON.stringify(db));
+    try { await fetch('/api/cerprod/sincronizar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ terminal: mod, dados: dados }) }); } catch (e) {}
+    alert('Dados sincronizados com sucesso!');
+    render(mod);
+}
+
+function salvarTarifas() {
+    const db = getDB();
+    db.tarifas = { argila: Number(document.getElementById('tf_argila').value || 8500), combustivel: Number(document.getElementById('tf_comb').value || 420), energia: Number(document.getElementById('tf_energ').value || 180) };
+    localStorage.setItem('cerprod_v4_db', JSON.stringify(db));
+    render('administracao');
+}
+
+async function confirmarZerarDados() {
+    if (prompt('Escreva ZERAR para apagar permanentemente todos os registos:') !== 'ZERAR') return;
+    localStorage.removeItem('cerprod_v4_db');
+    try { await fetch('/api/cerprod/limpar', { method: 'POST' }); } catch (e) {}
+    render('administracao');
+}
+async function render(u) {
+    document.querySelectorAll('.aba').forEach(b => b.classList.remove('on'));
+    const abP = document.getElementById('aba-principal');
+    if (abP) abP.classList.add('on');
+    const m = document.getElementById('main');
+    const dtHoje = hojeISO();
+
+    if (u === 'producao') {
+        m.innerHTML = `<div class="box" style="max-width:780px">
+            <h3 style="font-size:18px">1. Produção & Matéria-Prima (Argila)</h3>
+            <div class="grid-form">
+                <div><label>Data do turno</label><input type="date" id="pr_data" value="${dtHoje}"></div>
+                <div><label>Produto cerâmico</label><select id="pr_tipo"><option>Tijolo N.º 15</option><option>Tijolo N.º 11</option><option>Tijolo N.º 20</option><option>Abobadilha</option></select></div>
+                <div><label>Tijolos moldados (unidades)</label><input type="number" id="pr_qtd" placeholder="Ex.: 15 000"></div>
+                <div><label>Consumo de argila (m³)</label><input type="number" id="pr_argila" placeholder="Ex.: 45"></div>
             </div>
-            <div class="field">
-                <label>Código PIN / Password</label>
-                <input type="password" id="login-pin" placeholder="••••••••">
+            <button class="btn-primary" style="margin-top:8px" onclick="gravarTurno('producao')">Sincronizar Produção</button>
+        </div>`;
+    }
+    else if (u === 'secagem') {
+        m.innerHTML = `<div class="box" style="max-width:780px">
+            <h3 style="font-size:18px">2. Secagem & Forno (Combustível e Energia)</h3>
+            <div class="grid-form">
+                <div><label>Data do turno</label><input type="date" id="sc_data" value="${dtHoje}"></div>
+                <div><label>Tijolos secos / enfornados (unidades)</label><input type="number" id="sc_qtd" placeholder="Ex.: 14 200"></div>
+                <div><label>Combustível / Gasóleo (litros)</label><input type="number" id="sc_combustivel" placeholder="Ex.: 850"></div>
+                <div><label>Energia / Electricidade (kWh)</label><input type="number" id="sc_energia" placeholder="Ex.: 620"></div>
             </div>
-            <div id="login-erro" style="color:#ef4444; font-size:12px; font-weight:bold; margin-bottom:12px; display:none;">Credenciais inválidas ou licença expirada!</div>
-            <button class="btn-bic" onclick="autenticarUsuario()">Entrar no Portal</button>
-            <div id="licenca-login-info" style="margin-top:16px; font-size:11px; color:var(--mut); text-align:center;"></div>
-        </div>
-    </div>
+            <button class="btn-primary" style="margin-top:8px" onclick="gravarTurno('secagem')">Sincronizar Secagem & Forno</button>
+        </div>`;
+    }
+    else if (u === 'desenforna') {
+        m.innerHTML = `<div class="box" style="max-width:780px">
+            <h3 style="font-size:18px">3. Desenforna & Triagem Final</h3>
+            <div class="grid-form">
+                <div><label>Data do turno</label><input type="date" id="ds_data" value="${dtHoje}"></div>
+                <div><label>Tijolos bons / aprovados (unidades)</label><input type="number" id="ds_bons" placeholder="Ex.: 13 500"></div>
+                <div><label>Tijolos quebrados / perda (unidades)</label><input type="number" id="ds_quebrados" placeholder="Ex.: 400"></div>
+            </div>
+            <button class="btn-primary" style="margin-top:8px" onclick="gravarTurno('desenforna')">Sincronizar Desenforna</button>
+        </div>`;
+    }
+    else if (u === 'supervisao') {
+        m.innerHTML = `<div class="box" style="max-width:780px">
+            <h3 style="font-size:18px">4. Supervisão de Turno (Pessoal, Insumos & Custos Operacionais)</h3>
+            <div class="grid-form">
+                <div><label>Data do turno</label><input type="date" id="sp_data" value="${dtHoje}"></div>
+                <div><label>Efectivo de operários no turno</label><input type="number" id="sp_operarios" placeholder="Ex.: 24"></div>
+                <div><label>Salário diário base / operário (Kz)</label><input type="number" id="sp_salario" placeholder="Ex.: 6 500"></div>
+                <div><label>Total de horas extras (horas)</label><input type="number" id="sp_he" placeholder="Ex.: 16"></div>
+                <div><label>Valor por hora extra (Kz)</label><input type="number" id="sp_val_he" placeholder="Ex.: 1 500"></div>
+                <div><label>Tarifa da argila (Kz / m³)</label><input type="number" id="sp_tf_argila" placeholder="Ex.: 8 500"></div>
+                <div><label>Preço do combustível / gasóleo (Kz / L)</label><input type="number" id="sp_tf_comb" placeholder="Ex.: 420"></div>
+                <div><label>Tarifa de energia eléctrica (Kz / kWh)</label><input type="number" id="sp_tf_energ" placeholder="Ex.: 180"></div>
+                <div><label>Manutenção, lubrificantes e outros (Kz)</label><input type="number" id="sp_manutencao" placeholder="Ex.: 45 000"></div>
+            </div>
+            <button class="btn-primary" style="margin-top:8px" onclick="gravarTurno('supervisao')">Sincronizar Supervisão</button>
+        </div>`;
+    }
+    else {
+        const adm = (u === 'administracao');
+        const db = getDB();
+        let lista = db.historico || [];
+        try {
+            const r = await fetch('/api/cerprod/historico');
+            if (r.ok) { const j = await r.json(); if (j.lancamentos && j.lancamentos.length > 0) lista = j.lancamentos; }
+        } catch (e) {}
 
-    <!-- CABEÇALHO CORPORATIVO -->
-    <div class="topbar">
-        <div>
-            <div class="login-logo" style="font-size:19px;">CER<span>PROD</span> INDUSTRIAL <span style="font-size:12px; color:var(--mut); font-weight:normal;">| MES/ERP Industrial</span></div>
-            <div id="user-badge" style="font-size:12px; color:var(--bic-blue); font-weight:bold; margin-top:2px;"></div>
-        </div>
-        <div style="display:flex; align-items:center; gap:12px;">
-            <span id="licenca-status" class="licenca-badge"></span>
-            <button class="btn-bic no-print" style="width:auto; padding:8px 14px; background:#334155; font-size:11px;" onclick="location.reload()">Terminar Sessão</button>
-        </div>
-    </div>
+        const gd = term => lista.filter(x => x.terminal_origem === term).reverse().reduce((ac, cu) => Object.assign(ac, cu.dados_producao || {}), {});
+        const p1 = gd('producao'), p2 = gd('secagem'), p3 = gd('desenforna'), p4 = gd('supervisao');
 
-    <div class="layout">
-        <!-- MENU LATERAL ESTILO BICNET EMPRESAS -->
-        <aside class="sidebar no-print">
+        const mold = Number(p1.pr_qtd || 0), sec = Number(p2.sc_qtd || 0), bons = Number(p3.ds_bons || 0), queb = Number(p3.ds_quebrados || 0);
+        const argilaM3 = Number(p1.pr_argila || 0), combL = Number(p2.sc_combustivel || 0), energKwh = Number(p2.sc_energia || 0);
+        const oper = Number(p4.sp_operarios || 0), sal = Number(p4.sp_salario || 0), he = Number(p4.sp_he || 0), vhe = Number(p4.sp_val_he || 0), cManut = Number(p4.sp_manutencao || 0);
+        const temDados = (lista.length > 0);
+
+        const cArgila = argilaM3 * Number(p4.sp_tf_argila || 0);
+        const cComb = combL * Number(p4.sp_tf_comb || 0);
+        const cEnerg = energKwh * Number(p4.sp_tf_energ || 0);
+        const cPessoal = (oper * sal) + (he * vhe);
+        const custoTotal = cArgila + cComb + cEnerg + cPessoal + cManut;
+        const custoUnit = bons > 0 ? (custoTotal / bons) : 0;
+
+        const totTri = bons + queb;
+        const pctOk = totTri > 0 ? Math.round((bons / totTri) * 100) : 0;
+        const maxP = Math.max(mold, sec, bons, queb, 1);
+
+        const pilares = [
+            { nome: 'Combustível', val: cComb },
+            { nome: 'Energia', val: cEnerg },
+            { nome: 'Argila', val: cArgila },
+            { nome: 'Pessoal', val: cPessoal },
+            { nome: 'Manutenção', val: cManut }
+        ].sort((a, b) => b.val - a.val);
+        const maxC = Math.max(...pilares.map(x => x.val), 1);
+
+        const listaFiltrada = FILTRO_DATA_HIST ? lista.filter(x => (x.data_turno || (x.criado_em || '').slice(0, 10)) === FILTRO_DATA_HIST) : lista;
+        const linhasHist = listaFiltrada.slice(0, 40).map((item, idx) => {
+            const d = item.dados_producao || {};
+            const dt = item.data_turno || (item.criado_em ? item.criado_em.slice(0, 10) : '-');
+            const tm = (item.terminal_origem || '').toUpperCase();
+            let res = '';
+            if (tm === 'PRODUCAO') res = `Moldados: ${fmtNum(d.pr_qtd)} un | Argila: ${d.pr_argila || 0} m³`;
+            else if (tm === 'SECAGEM') res = `Secos: ${fmtNum(d.sc_qtd)} un | Combustível: ${d.sc_combustivel || 0} L | Energia: ${d.sc_energia || 0} kWh`;
+            else if (tm === 'DESENFORNA') res = `Bons: ${fmtNum(d.ds_bons)} un | Quebrados: ${fmtNum(d.ds_quebrados)} un`;
+            else if (tm === 'SUPERVISAO') res = `Efectivo: ${d.sp_operarios || 0} op | H. extras: ${d.sp_he || 0} h` + (adm ? ` | Custos Turno: ${fmtKz((Number(d.sp_operarios||0)*Number(d.sp_salario||0)) + (Number(d.sp_he||0)*Number(d.sp_val_he||0)) + Number(d.sp_manutencao||0))}` : '');
+            return `<tr><td>#${listaFiltrada.length - idx}</td><td>${dt}</td><td><b>${tm}</b></td><td>${res}</td></tr>`;
+        }).join('');
+        m.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
             <div>
-                <div class="menu-titulo">Módulos Autorizados</div>
-                <button class="aba-btn" id="tab-producao">🧱 1. Produção (Moldagem)</button>
-                <button class="aba-btn" id="tab-secagem">🔥 2. Secagem & Forno</button>
-                <button class="aba-btn" id="tab-desenforna">📦 3. Desenforna & Triagem</button>
-                <button class="aba-btn" id="tab-supervisao">👷 4. Supervisão de Turno</button>
-                <button class="aba-btn" id="tab-direccao">📊 5. Direcção (BI Bié)</button>
-                <button class="aba-btn" id="tab-administracao">🏛️ 6. Administração (BI Luanda)</button>
+                <div style="font-size:12px;color:#93c5fd;font-weight:600">${adm ? 'Sede Luanda • Engenharia de Custo Unitário (Kz)' : 'Unidade Bié • Indicadores Físicos de Produção'}</div>
+                <h1 style="font-size:22px;margin-top:2px">CERPROD • Painel Analítico</h1>
             </div>
-            <div style="padding:12px; background:var(--bic-dark); border-radius:8px; font-size:11px; color:var(--mut);">
-                <b>Arquitetura SOLID (OCP)</b><br>
-                Desenvolvido por Vladmir Dieiro
+            <button class="btn-outline noprint" onclick="window.print()">Exportar / Imprimir PDF</button>
+        </div>
+
+        <div class="kpi-row">
+            <div class="kpi"><span>1. Produção</span><h2>${fmtNum(mold)} un</h2></div>
+            <div class="kpi"><span>2. Secagem</span><h2>${fmtNum(sec)} un</h2></div>
+            <div class="kpi"><span>3. Desenforna</span><h2>${fmtNum(bons)} un</h2></div>
+            <div class="kpi"><span>Sincronizações</span><h2>${lista.length} lotes</h2></div>
+            ${adm ? `
+                <div class="kpi ${custoUnit > 180 ? 'alert' : ''}"><span>Custo Real / Tijolo</span><h2>${fmtKz(custoUnit)}</h2></div>
+                <div class="kpi"><span>Custo Total Fornada</span><h2>${fmtKz(custoTotal)}</h2></div>
+            ` : ''}
+        </div>
+
+        <div class="bi-grid">
+            <div class="box" style="margin-bottom:0">
+                <div style="font-size:13px;color:#cbd5e1;font-weight:600;margin-bottom:12px">Fluxo Físico Real (Unidades)</div>
+                ${!temDados ? `<div class="empty-state">Sem registos neste turno</div>` : `
+                <div class="bars">
+                    <div class="bar-col"><div class="bar" style="height:${Math.max(6,Math.round((mold/maxP)*90))}%;background:#3b82f6"><b>${fmtNum(mold)}</b></div><div class="bar-lbl">Produção</div></div>
+                    <div class="bar-col"><div class="bar" style="height:${Math.max(6,Math.round((sec/maxP)*90))}%;background:#f59e0b"><b>${fmtNum(sec)}</b></div><div class="bar-lbl">Secagem</div></div>
+                    <div class="bar-col"><div class="bar" style="height:${Math.max(6,Math.round((bons/maxP)*90))}%;background:#10b981"><b>${fmtNum(bons)}</b></div><div class="bar-lbl">Desenforna</div></div>
+                    <div class="bar-col"><div class="bar" style="height:${Math.max(6,Math.round((queb/maxP)*90))}%;background:#ef4444"><b>${fmtNum(queb)}</b></div><div class="bar-lbl">Quebras</div></div>
+                </div>`}
             </div>
-        </aside>
 
-        <!-- ÁREA DE CONTEÚDO EXCLUSIVA DO UTILIZADOR LOGADO -->
-        <main class="content" id="area-trabalho"></main>
-    </div>
-
-    <script>
-        // 1. VALIDADE DE LICENÇA DE 1 ANO (365 DIAS)
-        const DATA_ATIVACAO = new Date('2026-11-23T00:00:00');
-        const DATA_EXPIRACAO = new Date('2027-11-23T23:59:59');
-        const HOJE = new Date();
-        const diasRestantes = Math.ceil((DATA_EXPIRACAO - HOJE) / (1000 * 60 * 60 * 24));
-        const licencaValida = HOJE <= DATA_EXPIRACAO;
-
-        document.getElementById('licenca-login-info').innerText = licencaValida
-            ? `Licença Anual Ativa • Válida até 23/11/2027 (${diasRestantes} dias restantes)`
-            : 'LICENÇA ANUAL EXPIRADA • Contacte o Administrador.';
-
-        // 2. CREDENCIAIS DOS 6 UTILIZADORES ISOLADOS
-        const USERS = {
-            producao:      { nome: "Técnico de Produção (Moldagem)",      pin: "1001", tipo: "TECNICO" },
-            secagem:       { nome: "Técnico de Secagem (Estufa/Forno)",   pin: "2002", tipo: "TECNICO" },
-            desenforna:    { nome: "Técnico de Desenforna (Triagem)",     pin: "3003", tipo: "TECNICO" },
-            supervisao:    { nome: "Supervisor Geral de Turno (NDA)",     pin: "4004", tipo: "TECNICO" },
-            direccao:      { nome: "Director de Produção (Unidade Bié)",  pin: "5005", tipo: "ANALISE" },
-            administracao: { nome: "Administrador Executivo (Luanda)",    pin: "luanda2026", tipo: "ANALISE" }
-        };
-
-        let userAtivo = null;
-
-        function autenticarUsuario() {
-            if (!licencaValida) {
-                document.getElementById('login-erro').innerText = 'Licença anual expirada!';
-                document.getElementById('login-erro').style.display = 'block';
-                return;
-            }
-            const perfil = document.getElementById('login-perfil').value;
-            const pin = document.getElementById('login-pin').value.trim();
-
-            if (USERS[perfil] && USERS[perfil].pin === pin) {
-                userAtivo = perfil;
-                document.getElementById('bicnet-login').style.display = 'none';
-                iniciarSessaoBICNet(perfil);
-            } else {
-                document.getElementById('login-erro').style.display = 'block';
-            }
-        }
-
-        document.getElementById('login-pin').addEventListener('keypress', e => { if (e.key === 'Enter') autenticarUsuario(); });
-
-        function iniciarSessaoBICNet(perfil) {
-            document.getElementById('user-badge').innerText = `Utilizador Ativo: ${USERS[perfil].nome}`;
-            document.getElementById('licenca-status').innerText = `✔ Licença Anual Ativa (${diasRestantes} dias)`;
-
-            // Isola abas estilo BICNet: apenas a aba do utilizador fica ativa; as restantes ficam bloqueadas
-            document.querySelectorAll('.aba-btn').forEach(btn => {
-                if (btn.id === `tab-${perfil}`) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.add('bloqueada');
-                    btn.title = 'Acesso restrito ao perfil autorizado';
-                }
-            });
-
-            renderizarArea(perfil);
-        }
-
-        async function sincronizarDados(perfil) {
-            const inputs = Array.from(document.querySelectorAll('#area-trabalho input, #area-trabalho select'));
-            const payload = {};
-            inputs.forEach(i => { if (i.id) payload[i.id] = i.value; });
-
-            try {
-                const res = await fetch('/api/cerprod/sincronizar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ terminal: perfil, dados: payload })
-                });
-                const data = await res.json();
-                alert(`✅ SINCRONIZAÇÃO CONCLUÍDA!\n${data.message || 'Dados enviados para Direcção e Administração.'}`);
-            } catch (e) {
-                alert('⚠️ Sem ligação ao servidor central. Dados guardados na fila offline do terminal.');
-            }
-        }
-
-        async function renderizarArea(perfil) {
-            const area = document.getElementById('area-trabalho');
-
-            // 1. PRODUÇÃO
-            if (perfil === 'producao') {
-                area.innerHTML = `
-                    <div class="panel-box">
-                        <div class="panel-header"><h2>🧱 Módulo 1: Produção & Moldagem</h2><span style="color:var(--bic-blue); font-size:12px;">Acesso Técnico</span></div>
-                        <div class="grid-2">
-                            <div class="field"><label>Data do Turno</label><input type="date" id="prod_data" value="${new Date().toISOString().split('T')}"></div>
-                            <div class="field"><label>Produto Cerâmico</label><select id="prod_tipo"><option>Tijolo N.º 15</option><option>Tijolo N.º 11</option><option>Tijolo N.º 20</option><option>Tijolo N.º 7</option><option>Abobadilha</option></select></div>
-                            <div class="field"><label>Quantidade Moldada (Unidades)</label><input type="number" id="prod_qtd" placeholder="Ex: 15000"></div>
-                            <div class="field"><label>Lote / Extrusora</label><input type="text" id="prod_lote" placeholder="Ex: LOTE-M01"></div>
-                        </div>
-                        <button class="btn-sync" onclick="sincronizarDados('producao')">📡 Sincronizar Produção com Central</button>
-                    </div>`;
-            }
-            // 2. SECAGEM
-            else if (perfil === 'secagem') {
-                area.innerHTML = `
-                    <div class="panel-box">
-                        <div class="panel-header"><h2>🔥 Módulo 2: Secagem & Forno</h2><span style="color:var(--bic-gold); font-size:12px;">Acesso Técnico</span></div>
-                        <div class="grid-2">
-                            <div class="field"><label>Data da Queima / Secagem</label><input type="date" id="sec_data" value="${new Date().toISOString().split('T')}"></div>
-                            <div class="field"><label>Produto em Forno</label><select id="sec_tipo"><option>Tijolo N.º 15</option><option>Tijolo N.º 11</option><option>Tijolo N.º 20</option><option>Abobadilha</option></select></div>
-                            <div class="field"><label>Tijolos Secos / Enfornados (Unidades)</label><input type="number" id="sec_qtd" placeholder="Ex: 14200"></div>
-                            <div class="field"><label>Perdas na Secagem (Unidades)</label><input type="number" id="sec_perda" placeholder="Ex: 300"></div>
-                        </div>
-                        <button class="btn-sync" onclick="sincronizarDados('secagem')">📡 Sincronizar Secagem com Central</button>
-                    </div>`;
-            }
-            // 3. DESENFORNA
-            else if (perfil === 'desenforna') {
-                area.innerHTML = `
-                    <div class="panel-box">
-                        <div class="panel-header"><h2>📦 Módulo 3: Desenforna & Triagem Final</h2><span style="color:var(--bic-green); font-size:12px;">Acesso Técnico</span></div>
-                        <div class="grid-2">
-                            <div class="field"><label>Data de Desenforna</label><input type="date" id="des_data" value="${new Date().toISOString().split('T')}"></div>
-                            <div class="field"><label>Produto Triado</label><select id="des_tipo"><option>Tijolo N.º 15</option><option>Tijolo N.º 11</option><option>Tijolo N.º 20</option><option>Abobadilha</option></select></div>
-                            <div class="field"><label>Tijolos Prontos / Bons (Unidades)</label><input type="number" id="des_bons" placeholder="Ex: 13500"></div>
-                            <div class="field"><label>Quebrados na Desenforna (Unidades)</label><input type="number" id="des_quebrados" placeholder="Ex: 400"></div>
-                        </div>
-                        <button class="btn-sync" onclick="sincronizarDados('desenforna')">📡 Sincronizar Desenforna com Central</button>
-                    </div>`;
-            }
-            // 4. SUPERVISÃO (NDA BLOQUEADO - SEM CUSTOS KZ)
-            else if (perfil === 'supervisao') {
-                area.innerHTML = `
-                    <div class="panel-box">
-                        <div class="panel-header"><h2>👷 Módulo 4: Supervisão de Turno</h2><span style="color:#ef4444; font-size:11px; font-weight:bold;">NDA ATIVO • DADOS FINANCEIROS OCULTOS</span></div>
-                        <div class="grid-2">
-                            <div class="field"><label>Turno Supervisionado</label><select id="sup_turno"><option>Turno Manhã (06h - 14h)</option><option>Turno Tarde (14h - 22h)</option><option>Turno Noite (22h - 06h)</option></select></div>
-                            <div class="field"><label>Efetivo de Operários Presentes</label><input type="number" id="sup_operarios" placeholder="Ex: 24"></div>
-                            <div class="field"><label>Ocorrências / Paragens de Máquina</label><input type="text" id="sup_ocorrencias" placeholder="Ex: Operação normal sem paragens"></div>
-                            <div class="field"><label>Validação Física de Stock em Pátio</label><input type="number" id="sup_stock" placeholder="Ex: 25000"></div>
-                        </div>
-                        <button class="btn-sync" onclick="sincronizarDados('supervisao')">📡 Sincronizar Supervisão com Central</button>
-                    </div>`;
-            }
-            // 5 & 6. DIRECÇÃO E ADMINISTRAÇÃO (VISUAL POWER BI + INJEÇÃO PRINT PDF)
-            else if (perfil === 'direccao' || perfil === 'administracao') {
-                const isAdmin = (perfil === 'administracao');
-                let totalSync = 0;
-                try {
-                    const r = await fetch('/api/cerprod/historico');
-                    const j = await r.json();
-                    totalSync = j.total || 0;
-                } catch (e) {}
-
-                area.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <div style="font-size:11px; color:var(--bic-gold); font-weight:bold; text-transform:uppercase;">
-                                ${isAdmin ? '🏛️ SEDE LUANDA • RELATÓRIO EXECUTIVO & FINANCEIRO (KZ)' : '📊 UNIDADE BIÉ • RELATÓRIO ANALÍTICO DE PRODUÇÃO (NDA)'}
-                            </div>
-                            <h1 style="font-size:22px;">CERPROD • Painel de Análise</h1>
-                        </div>
-                        <button class="btn-print no-print" onclick="window.print()">🖨️ Exportar / Imprimir Relatório PDF</button>
+            <div class="box" style="margin-bottom:0">
+                <div style="font-size:13px;color:#cbd5e1;font-weight:600;margin-bottom:12px">Eficiência & Consumos Físicos</div>
+                <div style="display:flex;align-items:center;justify-content:space-around;height:185px">
+                    <div class="donut" style="background:${totTri > 0 ? `conic-gradient(#10b981 0% ${pctOk}%, #ef4444 ${pctOk}% 100%)` : '#334155'}">
+                        <div class="hole"><b style="font-size:20px;color:${totTri > 0 ? '#10b981' : '#94a3b8'}">${pctOk}%</b><span style="font-size:10px;color:#94a3b8">Aprovado</span></div>
                     </div>
-
-                    <div class="kpi-grid">
-                        <div class="kpi-card" style="border-color:#38bdf8;"><span>1. Produção (Moldados)</span><h2>0 un</h2></div>
-                        <div class="kpi-card" style="border-color:#f59e0b;"><span>2. Secagem & Forno</span><h2>4.800 un</h2></div>
-                        <div class="kpi-card" style="border-color:#10b981;"><span>3. Desenforna (Prontos)</span><h2 style="color:#10b981;">4.500 un</h2></div>
-                        <div class="kpi-card" style="border-color:#a855f7;"><span>Sincronizações Recebidas</span><h2>${totalSync} lotes</h2></div>
-                        ${isAdmin ? '<div class="kpi-card" style="border-color:#10b981; background:#064e3b;"><span>Avaliação Financeira (Luanda)</span><h2>0 Kz</h2></div>' : ''}
+                    <div style="font-size:13px;line-height:2">
+                        <div><b>Argila:</b> ${argilaM3} m³</div>
+                        <div><b>Combustível:</b> ${fmtNum(combL)} L</div>
+                        <div><b>Energia:</b> ${fmtNum(energKwh)} kWh</div>
+                        <div><b>Efectivo:</b> ${oper} op (${he} h)</div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <div class="bi-grid">
-                        <div class="bi-box">
-                            <div style="font-size:12px; color:var(--mut); font-weight:bold; text-transform:uppercase; margin-bottom:12px;">Gráfico Comparativo por Etapa Industrial</div>
-                            <div class="col-chart">
-                                <div class="col-item"><div class="col-bar" style="height:95%; background:#38bdf8;"><span class="col-val">65.5k</span></div><div class="col-lbl">Produção</div></div>
-                                <div class="col-item"><div class="col-bar" style="height:55%; background:#f59e0b;"><span class="col-val">4.8k</span></div><div class="col-lbl">Secagem</div></div>
-                                <div class="col-item"><div class="col-bar" style="height:50%; background:#10b981;"><span class="col-val">4.5k</span></div><div class="col-lbl">Desenforna</div></div>
-                                <div class="col-item"><div class="col-bar" style="height:15%; background:#e63946;"><span class="col-val">500</span></div><div class="col-lbl">Quebras</div></div>
-                            </div>
-                        </div>
+        ${adm ? `
+        <div class="box">
+            <div style="font-size:13px;color:#cbd5e1;font-weight:600;margin-bottom:12px">Composição de Custos por Pilar (Ordenado do Maior para o Menor - Kz)</div>
+            ${!temDados ? `<div class="empty-state">Sem registos de custos neste turno</div>` : `
+            <div class="bars">
+                ${pilares.map(pl => `<div class="bar-col"><div class="bar" style="height:${Math.max(6,Math.round((pl.val/maxC)*88))}%;background:#3b82f6"><b>${fmtNum(pl.val)} Kz</b></div><div class="bar-lbl">${pl.nome}</div></div>`).join('')}
+            </div>`}
+        </div>` : ''}
 
-                        <div class="bi-box">
-                            <div style="font-size:12px; color:var(--mut); font-weight:bold; text-transform:uppercase; margin-bottom:12px;">Eficiência de Aproveitamento (Qualidade)</div>
-                            <div style="display:flex; align-items:center; justify-content:space-around; height:190px;">
-                                <div class="donut"><div class="donut-in"><b style="font-size:20px; color:#10b981;">90%</b><span style="font-size:10px; color:var(--mut);">APROVADO</span></div></div>
-                                <div style="font-size:13px; line-height:2;">
-                                    <div><span style="color:#10b981;">■</span> <b>Tijolos Bons:</b> 4.500 un</div>
-                                    <div><span style="color:#e63946;">■</span> <b>Quebrados:</b> 500 un</div>
-                                    <div><span style="color:#38bdf8;">■</span> <b>Stock Pátio:</b> 25.000 un</div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="box">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:10px">
+                <div style="font-size:13px;color:#cbd5e1;font-weight:600">Histórico Auditado de Operações (Consulta por Data)</div>
+                <div class="noprint" style="display:flex;align-items:center;gap:8px">
+                    <input type="date" style="margin:0;padding:6px 10px;width:auto;font-size:12.5px" value="${FILTRO_DATA_HIST}" onchange="FILTRO_DATA_HIST=this.value;render('${u}')">
+                    ${FILTRO_DATA_HIST ? `<button type="button" class="btn-outline" style="padding:6px 10px;font-size:12px" onclick="FILTRO_DATA_HIST='';render('${u}')">Limpar filtro</button>` : ''}
+                </div>
+            </div>
+            <div style="overflow-x:auto">
+                <table>
+                    <thead><tr><th>ID</th><th>Data do Turno</th><th>Sector</th><th>Resumo Operacional</th></tr></thead>
+                    <tbody>${linhasHist || `<tr><td colspan="4" style="text-align:center;color:#64748b;font-style:italic;padding:18px">Sem registos para a data seleccionada.</td></tr>`}</tbody>
+                </table>
+            </div>
+        </div>
 
-                        ${isAdmin ? `
-                        <div class="bi-box" style="border-color:rgba(16,185,129,0.4);">
-                            <div style="font-size:12px; color:#6ee7b7; font-weight:bold; text-transform:uppercase; margin-bottom:12px;">Análise Financeira Exclusiva (Sede Luanda - KZ)</div>
-                            <div class="col-chart">
-                                <div class="col-item" style="width:28%;"><div class="col-bar" style="height:90%; background:#10b981;"><span class="col-val">6.25M</span></div><div class="col-lbl">Valor Stock</div></div>
-                                <div class="col-item" style="width:28%;"><div class="col-bar" style="height:48%; background:#38bdf8;"><span class="col-val">1.12M</span></div><div class="col-lbl">Receita Lote</div></div>
-                                <div class="col-item" style="width:28%;"><div class="col-bar" style="height:22%; background:#e63946;"><span class="col-val">410K</span></div><div class="col-lbl">Custos Oper.</div></div>
-                            </div>
-                        </div>` : ''}
-                    </div>
-
-                    <div style="margin-top:35px; padding-top:14px; border-top:1px dashed #334155; font-size:11px; color:var(--mut); display:flex; justify-content:space-between;">
-                        <span>CERPROD • Relatório Oficial Auditado</span>
-                        <span>Licença Anual Válida até 23/11/2027 • Desenvolvido por Vladmir Dieiro</span>
-                    </div>`;
-            }
-        }
-    </script>
-    <script src="cerprod-custos-ocp.js"></script>
+        ${adm ? `<div class="noprint" style="display:flex;justify-content:flex-end;margin-top:10px"><button type="button" class="btn-danger-outline" onclick="confirmarZerarDados()">Zerar Dados do Sistema</button></div>` : ''}`;
+    }
+}
+</script>
     <script src="cerprod-i18n-ocp.js"></script>
-    <script src="cerprod-historico-ocp.js"></script>
+    <script src="cerprod-cloud-v3-ocp.js"></script>
+    <script src="cerprod-stock-v3-ocp.js"></script>
+    <script src="cerprod-kpi-excel-v3-ocp.js"></script>
 </body>
 </html>

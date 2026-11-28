@@ -1,85 +1,88 @@
 (function () {
-    let l = localStorage.getItem("cerprod_lang") || "PT";
-    const d = {
-        "PORTAL INDUSTRIAL MES/ERP • ACESSO RESTRITO": "INDUSTRIAL MES/ERP PORTAL • RESTRICTED ACCESS",
-        "PERFIL DE UTILIZADOR": "USER PROFILE",
-        "CÓDIGO PIN / PASSWORD": "PIN CODE / PASSWORD",
-        "ENTRAR NO PORTAL": "LOGIN TO PORTAL",
-        "MÓDULOS AUTORIZADOS": "AUTHORIZED MODULES",
-        "TERMINAR SESSÃO": "LOGOUT",
-        "ZERAR DADOS": "RESET DATA",
-        "EXPORTAR / IMPRIMIR PDF": "EXPORT / PRINT PDF",
-        "CERPROD • Painel Analitico": "CERPROD • Analytical Dashboard",
-        "SEDE LUANDA • ENGENHARIA DE CUSTO UNITARIO (KZ)": "LUANDA HQ • UNIT COST ENGINEERING (KZ)",
-        "UNIDADE BIE • INDICADORES FISICOS (NDA)": "BIÉ PLANT • PHYSICAL INDICATORS (NDA)",
-        "1. PRODUCAO": "1. PRODUCTION",
-        "2. SECAGEM": "2. DRYING",
-        "3. DESENFORNA": "3. UNLOADING",
-        "SINCRONIZACOES": "SYNCS",
-        "CUSTO REAL / TIJOLO": "REAL COST / BRICK",
-        "CUSTO TOTAL FORNADA": "TOTAL BATCH COST",
-        "FLUXO FISICO REAL (UNIDADES)": "REAL PHYSICAL FLOW (UNITS)",
-        "EFICIENCIA & CONSUMOS FISICOS": "EFFICIENCY & PHYSICAL CONSUMPTION",
-        "CUSTO UNITARIO POR PILAR (SEDE LUANDA - KZ)": "UNIT COST BY PILLAR (LUANDA HQ - KZ)",
-        "Producao": "Production",
+    const mapEN = {
+        "Portal de Gestão Fabril & Engenharia de Custos": "Industrial Management & Unit Cost Engineering Portal",
+        "Utilizador": "Username",
+        "Código PIN / Senha": "PIN Code / Password",
+        "Utilizador ou PIN inválido.": "Invalid username or PIN.",
+        "Entrar no Portal": "Sign In",
+        "Terminar sessão": "Sign out",
+        "Sobre o sistema": "About system",
+        "1. Produção (Moldagem)": "1. Production (Molding)",
+        "2. Secagem & Forno": "2. Drying & Kiln",
+        "3. Desenforna & Triagem": "3. Unloading & Sorting",
+        "4. Supervisão de Turno": "4. Shift Supervision",
+        "5. Direcção (Bié)": "5. Management (Bié)",
+        "6. Administração (Luanda)": "6. Administration (Luanda)",
+        "1. Produção & Matéria-Prima (Argila)": "1. Production & Raw Material (Clay)",
+        "2. Secagem & Forno (Combustível e Energia)": "2. Drying & Kiln (Fuel & Energy)",
+        "3. Desenforna & Triagem Final": "3. Unloading & Final Sorting",
+        "4. Supervisão de Turno (Pessoal, Manutenção & Lubrificantes)": "4. Shift Supervision (Staff, Maintenance & Lubricants)",
+        "Data do turno": "Shift date",
+        "Produto cerâmico": "Ceramic product",
+        "Tijolos moldados (unidades)": "Molded bricks (units)",
+        "Consumo de argila (m³)": "Clay consumption (m³)",
+        "Sincronizar Produção": "Synchronize Production",
+        "Tijolos secos / enfornados (unidades)": "Dried / kiln bricks (units)",
+        "Combustível / Gasóleo (litros)": "Fuel / Diesel (liters)",
+        "Energia / Electricidade (kWh)": "Electricity / Generator (kWh)",
+        "Sincronizar Secagem & Forno": "Synchronize Drying & Kiln",
+        "Tijolos bons / aprovados (unidades)": "Approved bricks (units)",
+        "Tijolos quebrados / perda (unidades)": "Broken bricks / loss (units)",
+        "Sincronizar Desenforna": "Synchronize Unloading",
+        "Efectivo de operários no turno": "Active workers on shift",
+        "Salário diário base / operário (Kz)": "Base daily wage / worker (Kz)",
+        "Total de horas extras (horas)": "Total overtime (hours)",
+        "Valor por hora extra (Kz)": "Overtime hourly rate (Kz)",
+        "Tarifa da argila (Kz / m³)": "Clay tariff (Kz / m³)",
+        "Preço do combustível / gasóleo (Kz / L)": "Fuel / diesel price (Kz / L)",
+        "Tarifa de energia eléctrica (Kz / kWh)": "Electricity tariff (Kz / kWh)",
+        "Manutenção, lubrificantes e outros (Kz)": "Maintenance, lubricants & others (Kz)",
+        "Sincronizar Supervisão": "Synchronize Supervision",
+        "Sede Luanda • Engenharia de Custo Unitário (Kz)": "Luanda HQ • Unit Cost Engineering (Kz)",
+        "Unidade Bié • Indicadores Físicos de Produção": "Bié Plant • Physical Production Indicators",
+        "CERPROD • Painel Analítico": "CERPROD • Analytical Dashboard",
+        "Exportar / Imprimir PDF": "Export / Print PDF",
+        "1. Produção": "1. Production",
+        "2. Secagem": "2. Drying",
+        "3. Desenforna": "3. Unloading",
+        "Sincronizações": "Synchronizations",
+        "Custo Real / Tijolo": "Real Cost / Brick",
+        "Custo Total Fornada": "Total Batch Cost",
+        "Fluxo Físico Real (Unidades)": "Real Physical Flow (Units)",
+        "Eficiência & Consumos Físicos": "Efficiency & Physical Consumption",
+        "Sem registos neste turno": "No records in this shift",
+        "Produção": "Production",
         "Secagem": "Drying",
         "Desenforna": "Unloading",
         "Quebras": "Breakage",
-        "APROVADO": "APPROVED",
-        "Combustivel": "Fuel",
+        "Aprovado": "Approved",
+        "Argila:": "Clay:",
+        "Combustível:": "Fuel:",
+        "Energia:": "Energy:",
+        "Efectivo:": "Staff:",
+        "Composição de Custos por Pilar (Ordenado do Maior para o Menor - Kz)": "Unit Cost Breakdown by Pillar (Ordered Highest to Lowest - Kz)",
+        "Sem registos de custos neste turno": "No cost data recorded in this shift",
+        "Combustível": "Fuel",
         "Energia": "Energy",
         "Argila": "Clay",
         "Pessoal": "Staff",
-        "Manut./Lub.": "Maint./Lub.", "Argila:": "Clay:", "Combustivel:": "Fuel:", "Energia:": "Energy:", "Pessoal:": "Staff:",
-        "ARQUIVO CRONOLÓGICO PERMANENTE (CONSULTA EXECUTIVA / VIAGENS)": "PERMANENT CHRONOLOGICAL ARCHIVE (EXECUTIVE / TRAVEL AUDIT)",
-        "DATA & HORA": "DATE & TIME",
-        "SETOR / TERMINAL": "SECTOR / TERMINAL",
-        "RESUMO FÍSICO & CONSUMOS": "PHYSICAL SUMMARY & CONSUMPTION",
-        "CUSTO APURADO (KZ)": "CALCULATED COST (KZ)",
-        "Nenhum lançamento registado no histórico ainda.": "No records logged in history yet.",
-        "CERPROD INDUSTRIAL • Custo Unitario Auditado": "CERPROD INDUSTRIAL • Audited Unit Cost",
-        "Arquitetura SOLID (OCP)": "SOLID Architecture (OCP)",
-        "Desenvolvido por Vladmir Dieiro": "Developed by Vladmir Dieiro"
-    };
-
-    window.mudarIdioma = function () {
-        localStorage.setItem("cerprod_lang", l === "PT" ? "EN" : "PT");
-        location.reload();
+        "Manutenção": "Maintenance",
+        "Histórico Auditado de Operações (Consulta por Data)": "Audited Operations History (Query by Date)",
+        "Limpar filtro": "Clear filter",
+        "Data do Turno": "Shift Date",
+        "Sector": "Sector",
+        "Resumo Operacional": "Operational Summary",
+        "Sem registos para a data seleccionada.": "No records for the selected date.",
+        "Zerar Dados do Sistema": "Reset System Data"
     };
 
     setInterval(() => {
-        const t = document.querySelector(".topbar, .top, #login-box");
-        if (t && !document.getElementById("btn-pt-en")) {
-            const b = document.createElement("button");
-            b.id = "btn-pt-en";
-            b.type = "button";
-            b.innerText = l === "PT" ? "🌐 PT | EN" : "🌐 EN | PT";
-            b.style.cssText = "background:#1e293b;color:#38bdf8;border:1px solid #38bdf8;padding:6px 12px;border-radius:6px;font-size:11px;font-weight:bold;cursor:pointer;margin-right:8px";
-            b.onclick = window.mudarIdioma;
-            t.appendChild(b);
-        }
-        if (l === "EN") {
-            document.querySelectorAll("button,label,option,div,span,p,h1,h3,th,td").forEach(e => {
-                if (e.children.length === 0) {
-                    const x = (e.innerText || "").trim();
-                    if (d[x]) e.innerText = d[x];
-                }
-            });
-            document.querySelectorAll(".aba-btn").forEach(b => {
-                b.innerHTML = b.innerHTML
-                    .replace("1. Produção (Moldagem)", "1. Production (Molding)")
-                    .replace("2. Secagem &amp; Forno", "2. Drying &amp; Kiln")
-                    .replace("2. Secagem & Forno", "2. Drying & Kiln")
-                    .replace("3. Desenforna &amp; Triagem", "3. Unloading &amp; Sorting")
-                    .replace("3. Desenforna & Triagem", "3. Unloading & Sorting")
-                    .replace("4. Supervisão de Turno", "4. Shift Supervision")
-                    .replace("5. Direcção (Bié)", "5. Management (Bié)")
-                    .replace("6. Administração (Luanda)", "6. Administration (Luanda)");
-            });
-            const h3 = document.querySelector("#ocp-historico-box h3");
-            if (h3 && h3.innerText.includes("Histórico")) {
-                h3.innerText = h3.innerText.replace("Histórico Auditado de Operações", "Audited Operations History").replace("registos", "records");
+        if ((localStorage.getItem("cerprod_lang") || "PT") !== "EN") return;
+        document.querySelectorAll("h1,h2,h3,p,label,button,span,div,th,td,b").forEach(el => {
+            if (el.children.length === 0) {
+                const txt = (el.innerText || "").trim();
+                if (mapEN[txt]) el.innerText = mapEN[txt];
             }
-        }
-    }, 450);
+        });
+    }, 250);
 })();
